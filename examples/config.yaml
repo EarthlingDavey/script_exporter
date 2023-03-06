@@ -16,7 +16,7 @@ discovery:
   # host: localhost
   # port: 1231
   # scheme: https
-  # path: /prefix-path
+  # path: /prefix
 
 scripts:
   - name: test

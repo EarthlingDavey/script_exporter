@@ -81,6 +81,7 @@ discovery:
   host: <string>
   port: <string>
   scheme: <string>
+  path: <string>
 
 scripts:
   - name: <string>
@@ -96,7 +97,7 @@ scripts:
       enforced: <boolean>
 ```
 
-The `name` of the script must be a valid Prometheus label value. The `command` string is the script which is executed with all arguments specified in `args`. To add dynamic arguments you can pass the `params` query parameter with a list of query parameters which values should be added as argument. The program will be executed directly, without a shell being invoked, and it is recommended that it be specified by path instead of relying on ``$PATH``.
+The `name` of the script must be a valid Prometheus label value. The `command` string is the script which is executed with all arguments specified in `args`. To add dynamic arguments you can pass the `params` query parameter with a list of query parameters which values should be added as argument. The program will be executed directly, without a shell being invoked, and it is recommended that it be specified by path instead of relying on `$PATH`.
 
 The optional `env` hash allow to run the script with custom environment variables.
 
@@ -146,18 +147,18 @@ Example config:
 
 ```yaml
 scrape_configs:
-  - job_name: 'script_test'
+  - job_name: "script_test"
     metrics_path: /probe
     params:
       script: [test]
       prefix: [script]
     static_configs:
       - targets:
-        - 127.0.0.1
+          - 127.0.0.1
     relabel_configs:
       - target_label: script
         replacement: test
-  - job_name: 'script_ping'
+  - job_name: "script_ping"
     scrape_interval: 1m
     scrape_timeout: 30s
     metrics_path: /probe
@@ -168,7 +169,7 @@ scrape_configs:
       output: [ignore]
     static_configs:
       - targets:
-        - example.com
+          - example.com
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -179,11 +180,11 @@ scrape_configs:
       - source_labels: [__param_target]
         target_label: instance
 
-  - job_name: 'script_exporter'
+  - job_name: "script_exporter"
     metrics_path: /metrics
     static_configs:
       - targets:
-        - 127.0.0.1:9469
+          - 127.0.0.1:9469
 ```
 
 Optionally, HTTP service discovery can be configured like this:
@@ -191,7 +192,7 @@ Optionally, HTTP service discovery can be configured like this:
 ```yaml
 - job_name: "exported-scripts"
   http_sd_configs:
-  - url: http://prometheus-script-exporter:9469/discovery
+    - url: http://prometheus-script-exporter:9469/discovery
 ```
 
 This will make prometheus reach to `/discovery` endpoint and collect the targets. Targets are all the scripts configured in the exporter.
@@ -200,5 +201,5 @@ This will make prometheus reach to `/discovery` endpoint and collect the targets
 
 Changes from version 1.3.0:
 
-- The command line flag ``-web.telemetry-path`` has been removed and its value is now always ``/probe``, which is a change from the previous default of ``/metrics``. The path ``/metrics`` now responds with Prometheus metrics for script_exporter itself.
-- The command line flag ``-config.shell`` has been removed. Programs are now always run directly.
+- The command line flag `-web.telemetry-path` has been removed and its value is now always `/probe`, which is a change from the previous default of `/metrics`. The path `/metrics` now responds with Prometheus metrics for script_exporter itself.
+- The command line flag `-config.shell` has been removed. Programs are now always run directly.
